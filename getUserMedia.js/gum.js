@@ -27,6 +27,9 @@ var opts = {
   // quality of the fallback stream
   quality: 85,
 
+  // frequency of snapshot updates (when webcam is copied to canvas)
+  updateFrequency: 100,
+
   // a debugger callback is available if needed
   debug: function () {},
 
@@ -120,4 +123,4 @@ getSnapshot = function () {
     //alert('No context was supplied to getSnapshot()');
   }
 };
-setInterval(getSnapshot, 500);
+setInterval(getSnapshot, opts.updateFrequency);
