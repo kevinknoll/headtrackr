@@ -22,10 +22,15 @@
 
     var canvas = document.getElementById('inputCanvas'),
         ctx = canvas.getContext('2d'),
-        img = new Image();
+        img = new Image(),
+        interval;
 
     img.onload = function() {
-      ctx.drawImage(img, 0, 0);
+      var x, y;
+      interval = setInterval(function(){
+        ctx.clearRect(0, 0, 320, 240);
+        ctx.drawImage(img, Math.random() * 20, Math.random() * 20);
+      },300);
     };
     img.src = 'nicenice.320.240.jpg';
   </script>
