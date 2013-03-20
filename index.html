@@ -20,14 +20,14 @@
     htracker.init(document.getElementById('inputVideo'), document.getElementById('inputCanvas'));
     htracker.start();
 
-    var canvas = document.getElementById('canvas'),
+    var canvas = document.getElementById('inputCanvas'),
         ctx = canvas.getContext('2d'),
         img = new Image();
 
     img.onload = function() {
       ctx.drawImage(img, 0, 0);
     };
-    img.src = 'http://nicenicejpg.com/320/240';
+    img.src = 'nicenice.320.240.jpg';
   </script>
 </body>
 </html>

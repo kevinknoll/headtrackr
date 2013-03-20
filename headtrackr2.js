@@ -78,6 +78,7 @@
 
 var headtrackr = {};
 headtrackr.rev = 2;
+headtrackr.slim = true;
 
 /**
  * @constructor
@@ -146,6 +147,22 @@ headtrackr.Tracker = function(params) {
 	}
 	
 	this.init = function(video, canvas) {
+		if (headtrackr.slim) {
+			canvasElement = canvas;
+			canvasContext = canvas.getContext("2d");
+
+			// create ui if needed
+			if (params.ui) {
+				ui = new headtrackr.Ui();
+			}
+
+			// create smoother if enabled
+			smoother = new headtrackr.Smoother(0.35, params.detectionInterval+15);
+
+			this.initialized = true;
+			return true;
+		}
+
 		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 		window.URL = window.URL || window.webkitURL || window.msURL || window.mozURL;
 		// check for camerasupport
@@ -212,9 +229,10 @@ headtrackr.Tracker = function(params) {
 	}
 	
 	track = function() {
-		// Copy video to canvas
-		canvasContext.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
-		
+		if (!headtrackr.slim) {
+			// Copy video to canvas
+			canvasContext.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+		}
 		// if facetracking hasn't started, initialize facetrackr
 		if (facetracker === undefined) {
 			facetracker = new headtrackr.facetrackr.Tracker({debug : params.debug, calcAngles : params.calcAngles});
@@ -355,8 +373,9 @@ headtrackr.Tracker = function(params) {
 		
 		// sometimes canvasContext is not available yet, so try and catch if it's not there...
 		try {
-      canvasContext.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
-      
+			if (!headtrackr.slim) {
+      	canvasContext.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+      }
       // in some cases, the video sends events before starting to draw
       // so check that we have something on video before starting to track
       var canvasContent = headtrackr.getWhitebalance(canvasElement);
@@ -372,6 +391,11 @@ headtrackr.Tracker = function(params) {
 	}
 	
 	this.start = function() {
+		if (headtrackr.slim) {
+			starter();
+			return true;
+		}
+
 		// check if initialized
 		if (!this.initialized) return false;
 		
