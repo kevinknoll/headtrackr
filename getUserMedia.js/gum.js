@@ -1,4 +1,5 @@
 var opts = {
+  tryNative: true,
   "audio": false,
   "video": true,
 
