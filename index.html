@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Headtrackr</title>
+</head>
+<body>
+  <canvas id="inputCanvas" width="320" height="240"></canvas>
+  <canvas id="debugCanvas" width="320" height="240"></canvas>
+  <video id="inputVideo" autoplay loop></video>
+  <script src="headtrackr.js"></script>
+  <script>
+    var htracker = new headtrackr.Tracker({
+      debug:document.getElementById('debugCanvas')
+    });
+    htracker.init(document.getElementById('inputVideo'), document.getElementById('inputCanvas'));
+    htracker.start();
+  </script>
+</body>
+</html>
