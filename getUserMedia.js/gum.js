@@ -107,9 +107,7 @@ getSnapshot = function () {
   // detection), we handle getting video/images for our canvas 
   // from our HTML5 <video> element.
   if (opts.context === 'webrtc') {
-    var video = opts.videoEl,
-        canvas = document.getElementById('inputCanvas');
-    canvas.getContext('2d').drawImage(video, 0, 0, opts.width, opts.height);
+    app.ctx.drawImage(opts.videoEl, 0, 0, opts.width, opts.height);
 
   // Otherwise, if the context is Flash, we ask the shim to
   // directly call window.webcam, where our shim is located
