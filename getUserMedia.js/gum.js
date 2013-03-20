@@ -21,7 +21,7 @@ var opts = {
   mode: "callback",
 
   // the flash fallback Url
-  swffile: "fallback/jscam_canvas_only.swf",
+  swffile: "getUserMedia.js/dist/fallback/jscam_canvas_only.swf",
 
   // quality of the fallback stream
   quality: 85,
@@ -31,16 +31,51 @@ var opts = {
 
   // callback for capturing the fallback stream
   onCapture: function () {
-      window.webcam.save();
+    window.webcam.save();
   },
 
   // callback for saving the stream, useful for
   // relaying data further.
-  onSave: function (data) {},
+  onSave: function (data) {
+    var col = data.split(';'),
+        img = app.image,
+        tmp = null,
+        w = opts.width,
+        h = opts.height;
+
+    for (var i = 0; i < w; i++) {
+      tmp = parseInt(col[i], 10);
+      img.data[app.pos + 0] = (tmp >> 16) & 0xff;
+      img.data[app.pos + 1] = (tmp >> 8) & 0xff;
+      img.data[app.pos + 2] = tmp & 0xff;
+      img.data[app.pos + 3] = 0xff;
+      app.pos += 4;
+    }
+
+    if (app.pos >= 4 * w * h) { 
+      app.ctx.putImageData(img, 0, 0);
+      app.pos = 0;
+    }
+  },
   onLoad: function () {}
 };
+
+var app = {
+  pos: 0,
+  cam: null,
+  filter_on: false,
+  filter_id: 0,
+  canvas: document.getElementById("inputCanvas"),
+  img: new Image()
+};
+app.ctx = app.canvas.getContext("2d");
+app.ctx.clearRect(0, 0, opts.width, opts.height);
+app.image = app.ctx.getImageData(0, 0, opts.width, opts.height);
+
+// Initialize webcam options for fallback
+window.webcam = opts;
 getUserMedia(opts, function(stream){
-  if (true) {
+  if (opts.context === 'webrtc') {
     var video = opts.videoEl;
 
     if ((typeof MediaStream !== "undefined" && MediaStream !== null) && stream instanceof MediaStream) {
@@ -59,6 +94,7 @@ getUserMedia(opts, function(stream){
       streamError();
     };
   } else{
+    opts.context = 'flash';
     // flash context
   }
 }, function(){
@@ -77,11 +113,12 @@ getSnapshot = function () {
   // Otherwise, if the context is Flash, we ask the shim to
   // directly call window.webcam, where our shim is located
   // and ask it to capture for us.
-  } else if(App.options.context === 'flash'){
+  } else if(opts.context === 'flash'){
+    window.webcam.capture();
     // flash
   }
   else{
-      alert('No context was supplied to getSnapshot()');
+    //alert('No context was supplied to getSnapshot()');
   }
 };
 setInterval(getSnapshot, 500);
