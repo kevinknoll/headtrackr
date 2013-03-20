@@ -8,25 +8,24 @@
   </style>
 </head>
 <body>
-  <canvas id="inputCanvas" width="320" height="240"></canvas>
-  <canvas id="debugCanvas" width="320" height="240"></canvas>
+  <canvas id="inputCanvas" width="460" height="380"></canvas>
+  <canvas id="debugCanvas" width="460" height="380"></canvas>
   <div id="webcam"></div>
-  <script src="getUserMedia.js/dist/getUserMedia.js"></script>
-  <script src="getUserMedia.js/gum.js"></script>
+  <!--<script src="getUserMedia.js/dist/getUserMedia.js"></script>
+  <script src="getUserMedia.js/gum.js"></script>-->
   <script src="headtrackr2.js"></script>
   <script>
-    /*var htracker = new headtrackr.Tracker({
+    var htracker = new headtrackr.Tracker({
       debug:document.getElementById('debugCanvas')
     });
-    htracker.init(document.getElementById('inputVideo'), document.getElementById('inputCanvas'));
-    htracker.start();*/
+    htracker.init(null, document.getElementById('inputCanvas'));
+    htracker.start();
 
     var canvas = document.getElementById('inputCanvas'),
         ctx = canvas.getContext('2d'),
         img = new Image(),
         interval;
 
-    /*
     img.onload = function() {
       var x, y;
       interval = setInterval(function(){
@@ -35,7 +34,6 @@
       },300);
     };
     img.src = 'nicenice.320.240.jpg';
-    */
   </script>
 </body>
 </html>
