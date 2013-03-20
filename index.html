@@ -3,11 +3,15 @@
 <head>
   <meta charset="utf-8">
   <title>Headtrackr</title>
+  <style>
+    canvas, video { border:1px solid #333; }
+  </style>
 </head>
 <body>
+  <canvas id="canvas" width="320" height="240"></canvas>
   <canvas id="inputCanvas" width="320" height="240"></canvas>
   <canvas id="debugCanvas" width="320" height="240"></canvas>
-  <video id="inputVideo" autoplay loop></video>
+  <video id="inputVideo" width="320" height="240" autoplay loop></video>
   <script src="headtrackr.js"></script>
   <script>
     var htracker = new headtrackr.Tracker({
@@ -15,6 +19,15 @@
     });
     htracker.init(document.getElementById('inputVideo'), document.getElementById('inputCanvas'));
     htracker.start();
+
+    var canvas = document.getElementById('canvas'),
+        ctx = canvas.getContext('2d'),
+        img = new Image();
+
+    img.onload = function() {
+      ctx.drawImage(img, 0, 0);
+    };
+    img.src = 'http://nicenicejpg.com/320/240';
   </script>
 </body>
 </html>
