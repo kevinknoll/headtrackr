@@ -24,6 +24,7 @@
       console.log('flash failed to load');
     };
     var fallback = function(options){
+      window.webcam = options;
       // Fallback to flash
       var source, el, cam;
 
@@ -74,16 +75,56 @@
 
       console.log(e);
       if (status === 'no camera') {
-        console.log('no camera');
+        /*TODO: handle no camera*/
       } else if (status === 'no getUserMedia') {
-        console.log('no getUserMedia, fallback to flash');
+        /*no userMedia, falling back to flash*/
+        var app = {
+          image:new Image(),
+          pos:0,
+          ctx:document.getElementById('inputCanvas').getContext('2d'),
+          interval:null
+        };
+        app.image = app.ctx.getImageData(0, 0, 320, 240);
+        /*load the swf*/
         fallback({
           swffile:'getUserMedia.js/dist/fallback/jscam_canvas_only.swf',
-          mode:'capture',
+          mode:'callback',
           quality:85,
           width:320,
           height:240,
-          el:'flash'
+          el:'flash',
+          debug:function(catg, msg){
+            if (catg === 'notify' && msg === 'Camera started') {
+              $('#flash').after('<button id="save">Save</button>');
+              $('#save').on('click', function(){
+                window.webcam.capture();
+              });
+            }
+          },
+          onCapture:function(){
+            window.webcam.save();
+          },
+          onSave:function(data){
+            var col = data.split(';'),
+                img = app.image,
+                tmp = null,
+                w = 320,
+                h = 240;
+
+            for (var i = 0; i < w; i++) {
+              tmp = parseInt(col[i], 10);
+              img.data[app.pos + 0] = (tmp >> 16) & 0xff;
+              img.data[app.pos + 1] = (tmp >> 8) & 0xff;
+              img.data[app.pos + 2] = tmp & 0xff;
+              img.data[app.pos + 3] = 0xff;
+              app.pos += 4;
+            }
+
+            if (app.pos >= 4 * w * h) {
+              app.ctx.putImageData(img, 0, 0);
+              app.pos = 0;
+            }
+          }
         });
       }
     });
