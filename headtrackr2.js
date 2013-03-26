@@ -78,7 +78,7 @@
 
 var headtrackr = {};
 headtrackr.rev = 2;
-headtrackr.slim = true;
+headtrackr.slim = false;
 
 /**
  * @constructor
@@ -147,6 +147,7 @@ headtrackr.Tracker = function(params) {
 	}
 	
 	this.init = function(video, canvas) {
+		headtrackr.slim = (video === null);
 		if (headtrackr.slim) {
 			canvasElement = canvas;
 			canvasContext = canvas.getContext("2d");

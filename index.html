@@ -15,7 +15,7 @@
   <!--<script src="getUserMedia.js/dist/getUserMedia.js"></script>
   <script src="getUserMedia.js/gum.js"></script>-->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script src="headtrackr.js"></script>
+  <script src="headtrackr2.js"></script>
   <script>
     var successCallback = function(){
       console.log('flash loaded successfully');
@@ -99,6 +99,9 @@
               $('#save').on('click', function(){
                 window.webcam.capture();
               });
+              /*re-init the head tracker*/
+              htracker.init(null, document.getElementById('inputCanvas'));
+              htracker.start();
             }
           },
           onCapture:function(){
